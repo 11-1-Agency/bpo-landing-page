@@ -1,5 +1,9 @@
 import { gsap } from "gsap";
 
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
 export function startLoader() {
 
     const svg = document.querySelector<SVGSVGElement>(".loader_logo svg");
@@ -82,9 +86,9 @@ export function animateNav() {
     const masterTimeline = gsap.timeline({
         ease: "none",
         scrollTrigger: {
-            trigger: ".navbar_section",
-            start: "top -20%",
-            end: "top -40%",
+            trigger: ".navigation_section",
+            start: "top -10%",
+            end: "top -20%",
             scrub: true,
         },
     });
