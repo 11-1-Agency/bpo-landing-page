@@ -20,7 +20,10 @@ export function startLoader() {
         svg.style.overflow = "visible";
     }
 
-    paths.forEach(path => path.style.filter = "blur(0px)");
+    paths.forEach((path) => {
+        path.style.filter = "blur(0px)";
+        path.style.opacity = "0";
+    });
 
     headerSpans.forEach(path => path.style.filter = "blur(0px)");
     headerSpans.forEach(path => path.style.display = "inline-block");
@@ -32,40 +35,38 @@ export function startLoader() {
         duration: 1,
     });
 
-    timeline.from(paths, {
+    timeline.fromTo(paths, {
         duration: 0.8,
         y: 100,
         opacity: 0,
         webkitFilter: "blur(10px)",
         ease: "cubic-bezier(0.34, 1.56, 0.64, 1)",
-        stagger: {
-            amount: 0.1
-        }
+    }, {
+        duration: 0.8,
+        y: 0,
+        opacity: 1,
+        webkitFilter: "blur(0px)",
+        ease: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        stagger: { amount: 0.1 }
     }).to(paths, {
         duration: 0.8,
         y: -100,
         opacity: 0,
         webkitFilter: "blur(10px)",
         ease: "cubic-bezier(0.34, 1.56, 0.64, 1)",
-        stagger: {
-            amount: 0.1
-        }
+        stagger: { amount: 0.1 }
     }, "+=1.2").to(bars, {
         duration: 0.5,
         height: 0,
         ease: "cubic-bezier(0.16, 1, 0.3, 1)",
-        stagger: {
-            amount: 0.4
-        }
+        stagger: { amount: 0.4 }
     }).from(headerSpans, {
         duration: 0.8,
         y: 100,
         opacity: 0,
         webkitFilter: "blur(10px)",
         ease: "cubic-bezier(0.34, 1.56, 0.64, 1)",
-        stagger: {
-            amount: 0.2
-        }
+        stagger: { amount: 0.2 }
     }, "-=0.6").from(".hero_highlight", {
         duration: 0.8,
         right: "100%",
@@ -76,9 +77,7 @@ export function startLoader() {
         opacity: 0,
         webkitFilter: "blur(4px)",
         ease: "cubic-bezier(0.16, 1, 0.3, 1)",
-        stagger: {
-            amount: 0.3
-        }
+        stagger: { amount: 0.3 }
     }, "-=0.8");
 }
 
@@ -93,5 +92,5 @@ export function animateNav() {
         },
     });
 
-    masterTimeline.to(":root", {  "--util--nav-logo": "4rem" })
+    masterTimeline.to(":root", { "--util--nav-logo": "4rem" })
 }
