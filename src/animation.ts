@@ -5,6 +5,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export function startLoader() {
+    // Lock the scroll
+    document.body.style.overflow = "hidden";
 
     const svg = document.querySelector<SVGSVGElement>(".loader_logo svg");
 
@@ -33,6 +35,9 @@ export function startLoader() {
     const timeline = gsap.timeline({
         ease: "power1.inOut",
         duration: 1,
+        onComplete: () => {
+            document.body.style.overflow = ""; // Unlock the scroll when the animation is complete
+        },
     });
 
     timeline.fromTo(paths, {
