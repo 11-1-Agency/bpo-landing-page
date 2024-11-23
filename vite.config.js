@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  base: "/bpo-landing-page/",
   build: {
     rollupOptions: {
       output: {
