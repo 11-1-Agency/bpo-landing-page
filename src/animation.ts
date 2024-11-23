@@ -87,7 +87,7 @@ export function startLoader() {
         duration: 0.8,
         right: "100%",
         ease: easing,
-    }, "-=0.6");
+    }, "-=0.7");
 }
 
 export function animateNav() {
