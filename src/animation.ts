@@ -32,6 +32,8 @@ export function startLoader() {
 
     footnotes.forEach(path => path.style.filter = "blur(0px)");
 
+    const easing = "cubic-bezier(0.22, 1, 0.36, 1)";
+
     const timeline = gsap.timeline({
         ease: "power1.inOut",
         duration: 1,
@@ -40,50 +42,52 @@ export function startLoader() {
         },
     });
 
+    timeline.timeScale(1.3);
+
     timeline.fromTo(paths, {
         duration: 0.8,
-        y: 100,
+        y: 30,
         opacity: 0,
         webkitFilter: "blur(10px)",
-        ease: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        ease: easing,
     }, {
         duration: 0.8,
         y: 0,
         opacity: 1,
         webkitFilter: "blur(0px)",
-        ease: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        ease: easing,
         stagger: { amount: 0.1 }
     }).to(paths, {
         duration: 0.8,
-        y: -100,
+        y: -30,
         opacity: 0,
         webkitFilter: "blur(10px)",
-        ease: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        ease: easing,
         stagger: { amount: 0.1 }
-    }, "+=1.2").to(bars, {
-        duration: 0.5,
+    }, "+=0.8").to(bars, {
+        duration: 0.6,
         height: 0,
-        ease: "cubic-bezier(0.16, 1, 0.3, 1)",
+        ease: easing,
         stagger: { amount: 0.4 }
-    }).from(headerSpans, {
+    }, "-=.8").from(headerSpans, {
         duration: 0.8,
         y: 100,
         opacity: 0,
         webkitFilter: "blur(10px)",
-        ease: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        ease: easing,
         stagger: { amount: 0.2 }
-    }, "-=0.6").from(".hero_highlight", {
-        duration: 0.8,
-        right: "100%",
-        ease: "cubic-bezier(.85, 0, .15, 1)",
-    }).from(footnotes, {
+    }, "-=0.8").from(footnotes, {
         duration: 0.4,
         y: "2rem",
         opacity: 0,
         webkitFilter: "blur(4px)",
-        ease: "cubic-bezier(0.16, 1, 0.3, 1)",
-        stagger: { amount: 0.3 }
-    }, "-=0.8");
+        ease: easing,
+        stagger: { amount: 0.2 }
+    }, "-=0.6").from(".hero_highlight", {
+        duration: 0.8,
+        right: "100%",
+        ease: easing,
+    }, "-=0.6");
 }
 
 export function animateNav() {
