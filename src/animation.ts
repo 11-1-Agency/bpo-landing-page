@@ -91,10 +91,16 @@ export function startLoader() {
 }
 
 export function animateNav() {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const navbar = document.querySelector<HTMLElement>('.navigation_section');
+
+    if (!navbar) return;
+
     const masterTimeline = gsap.timeline({
         ease: "none",
         scrollTrigger: {
-            trigger: ".navigation_section",
+            trigger: navbar,
             start: "top -10%",
             end: "top -20%",
             scrub: true,
@@ -102,4 +108,70 @@ export function animateNav() {
     });
 
     masterTimeline.to(":root", { "--util--nav-logo": "4rem" })
+
+    const stackingSection = document.querySelector<HTMLElement>('[data-section="stacking"]');
+
+    if (!stackingSection) return;
+
+    gsap.to(navbar, {
+        y: -navbar.offsetHeight,
+        ease: "none",
+        scrollTrigger: {
+            trigger: stackingSection,
+            start: `top ${window.innerHeight * 0.5}px`,
+            end: `top ${window.innerHeight * 0.5 - navbar.offsetHeight}px`,
+            scrub: true,
+        }
+    })
+}
+
+export function stackingAnimation() {
+    // Helper function to convert CSS variables to pixel values
+    function getVarInPixels(varName: string): number {
+        const testElem = document.createElement('div');
+        testElem.style.position = 'absolute';
+        testElem.style.visibility = 'hidden';
+        testElem.style.height = `var(${varName})`;
+        document.body.appendChild(testElem);
+
+        const computedHeight = getComputedStyle(testElem).height;
+        const valueInPixels = parseFloat(computedHeight);
+
+        document.body.removeChild(testElem);
+        return valueInPixels;
+    }
+
+    const padding = getVarInPixels('--insets--xx-lg');
+    const lineHeight = getVarInPixels('--typography--fonts-size--h2');
+
+    // Create a gsap.matchMedia instance
+    const mm = gsap.matchMedia();
+
+    // Define responsive animations
+    mm.add(
+        // For viewports at least 1024px wide
+        "(min-width: 1024px)", () => {
+            const sections = document.querySelectorAll<HTMLElement>('[data-section]');
+
+            sections.forEach((section, i) => {
+                const isFirst = i === 0;
+                const prevHeight = isFirst ? 0 : (sections[i - 1] as HTMLElement).offsetHeight;
+                const offset = prevHeight - (2 * padding) - (1.2 * lineHeight);
+
+                gsap.to(section, {
+                    marginTop: isFirst ? 0 : -offset,
+                    scrollTrigger: {
+                        trigger: section,
+                        start: `top ${window.innerHeight - padding * 3}px`,
+                        end: `top ${window.innerHeight * 0.5}px`,
+                        scrub: true,
+                    },
+                });
+
+            });
+
+            // Refresh ScrollTrigger on resize to ensure correct measurements
+            window.addEventListener('resize', () => ScrollTrigger.refresh());
+        },
+    );
 }
