@@ -1,7 +1,5 @@
-import { startLoader, animateNav, stackingAnimation } from "./animation";
+import { startLoader, animateNav } from "./animation";
 
 startLoader();
 
 animateNav();
-
-stackingAnimation();
