@@ -1,9 +1,14 @@
 import { gsap } from "gsap";
 
+import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger,CustomEase);
 
+/**
+ * Animates the loader.
+ * @function startLoader
+ */
 export function startLoader() {
     // Lock the scroll
     document.body.style.overflow = "hidden";
@@ -22,17 +27,21 @@ export function startLoader() {
         svg.style.overflow = "visible";
     }
 
+    // Animate the paths
     paths.forEach((path) => {
         path.style.filter = "blur(0px)";
         path.style.opacity = "0";
     });
 
+    // Animate the header spans
     headerSpans.forEach(path => path.style.filter = "blur(0px)");
     headerSpans.forEach(path => path.style.display = "inline-block");
 
+    // Animate the footnotes
     footnotes.forEach(path => path.style.filter = "blur(0px)");
 
-    const easing = "cubic-bezier(0.22, 1, 0.36, 1)";
+    CustomEase.create("easing", "0.33, 1, 0.68, 1");
+    CustomEase.create("easeOutQuint", "0.7, 0, 0.84, 0");
 
     const timeline = gsap.timeline({
         ease: "power1.inOut",
@@ -44,52 +53,50 @@ export function startLoader() {
 
     timeline.timeScale(1.3);
 
-    timeline.fromTo(paths, {
-        duration: 0.8,
-        y: 30,
-        opacity: 0,
-        webkitFilter: "blur(10px)",
-        ease: easing,
-    }, {
-        duration: 0.8,
-        y: 0,
-        opacity: 1,
-        webkitFilter: "blur(0px)",
-        ease: easing,
-        stagger: { amount: 0.1 }
-    }).to(paths, {
-        duration: 0.8,
-        y: -30,
-        opacity: 0,
-        webkitFilter: "blur(10px)",
-        ease: easing,
-        stagger: { amount: 0.1 }
-    }, "+=0.8").to(bars, {
-        duration: 0.6,
-        height: 0,
-        ease: easing,
-        stagger: { amount: 0.4 }
-    }, "-=.8").from(headerSpans, {
-        duration: 0.8,
-        y: 100,
-        opacity: 0,
-        webkitFilter: "blur(10px)",
-        ease: easing,
-        stagger: { amount: 0.2 }
-    }, "-=0.8").from(footnotes, {
-        duration: 0.4,
-        y: "2rem",
-        opacity: 0,
-        webkitFilter: "blur(4px)",
-        ease: easing,
-        stagger: { amount: 0.2 }
-    }, "-=0.6").from(".hero_highlight", {
-        duration: 0.8,
-        right: "100%",
-        ease: easing,
-    }, "-=0.7");
+    // Animate the paths
+    timeline.
+        fromTo(
+            paths,
+            { duration: 0.8, y: 30, opacity: 0, webkitFilter: "blur(10px)", ease: "easing", },
+            { duration: 0.8, y: 0, opacity: 1, webkitFilter: "blur(0px)", ease: "easing", stagger: { amount: 0.1 } }
+        )
+        .to(
+            paths,
+            { duration: 0.8, y: -30, opacity: 0, webkitFilter: "blur(10px)", ease: "easing", stagger: { amount: 0.1 } },
+            "+=0.8"
+        )
+        .to(
+            bars,
+            { duration: 0.6, height: 0, ease: "easing", stagger: { amount: 0.4 } },
+            "-=.8"
+        )
+        .from(
+            headerSpans,
+            { duration: 0.8, y: 100, opacity: 0, webkitFilter: "blur(10px)", ease: "easing", stagger: { amount: 0.2 } },
+            "-=0.8"
+        )
+        .from(
+            footnotes,
+            { duration: 0.4, y: "2rem", opacity: 0, webkitFilter: "blur(4px)", ease: "easing", stagger: { amount: 0.2 } },
+            "-=0.6"
+        )
+        .from(
+            ".hero_highlight",
+            { duration: 0.8, right: "100%", ease: "easing", },
+            "-=0.7"
+        )
+        .fromTo(
+            '.hero_container',
+            { height: "100vh" },
+            { height: 'auto', duration: .8, easing: "easeOutQuint" },
+            "-=0.4"
+        );
 }
 
+/**
+ * Animates the navigation bar.
+ * @function animateNav
+ */
 export function animateNav() {
     gsap.registerPlugin(ScrollTrigger);
 
@@ -99,6 +106,7 @@ export function animateNav() {
 
     const masterTimeline = gsap.timeline({
         ease: "none",
+        // When the navbar reaches the top of the viewport, animate the logo
         scrollTrigger: {
             trigger: navbar,
             start: "top -10%",
@@ -107,15 +115,21 @@ export function animateNav() {
         },
     });
 
-    masterTimeline.to(":root", { "--util--nav-logo": "4rem" })
+    // Animate the logo size
+    masterTimeline
+    // .set('#daily-design', {clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)'})
+    .to(":root", { "--util--nav-logo": "4rem" })
+    .to('#nav-design-group', { yPercent: -120, opacity: 0})
 
     const stackingSection = document.querySelector<HTMLElement>('[data-section="stacking"]');
 
     if (!stackingSection) return;
 
+    // Animate the navbar out of the viewport when the stacking section is scrolled into view
     gsap.to(navbar, {
         y: -navbar.offsetHeight,
         ease: "none",
+        // When the stacking section is scrolled into view, animate the navbar
         scrollTrigger: {
             trigger: stackingSection,
             start: `top ${window.innerHeight * 0.5}px`,
