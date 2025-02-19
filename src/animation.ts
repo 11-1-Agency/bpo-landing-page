@@ -3,7 +3,7 @@ import { gsap } from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger,CustomEase);
+gsap.registerPlugin(ScrollTrigger, CustomEase);
 
 /**
  * Animates the loader.
@@ -117,9 +117,19 @@ export function animateNav() {
 
     // Animate the logo size
     masterTimeline
-    // .set('#daily-design', {clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)'})
-    .to(":root", { "--util--nav-logo": "4rem" })
-    .to('#nav-design-group', { yPercent: -120, opacity: 0})
+        .to(
+            ":root",
+            { "--util--nav-logo": "4rem" }
+        )
+        .to(
+            '#nav-design-group',
+            { yPercent: -120, opacity: 0 },
+            "<"
+        ).to(
+            '.nav_logo-link',
+            { yPercent: 25},
+            "<"
+        )
 
     const stackingSection = document.querySelector<HTMLElement>('[data-section="stacking"]');
 
